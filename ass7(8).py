@@ -1,26 +1,26 @@
-def decode_ways(e_str):
-    def decode_helper(e_str, i, current, r):
-        if i == len(e_str):
-            r.append("".join(current))
-            return
-        
-        if i < len(e_str) and e_str[i] != '0':
-            current.append(chr(int(e_str[i]) + ord('A') - 1))
-            decode_helper(e_str, i + 1, current, r)
-            current.pop()
-        
-        if i + 1 < len(e_str) and e_str[i] != '0' and 1 <= int(e_str[i:i+2]) <= 26:
-            current.append(chr(int(e_str[i:i+2]) + ord('A') - 1))
-            decode_helper(e_str, i + 2, current, r)
-            current.pop()
+def decode_ways(s, index=0, path="", result=None):
+    if result is None:
+        result = []
+    
+    if index == len(s):
+        result.append(path)
+        return result
+    
+    if s[index] == '0':
+        return result
+    
+    num1 = int(s[index])
+    decode_ways(s, index + 1, path + chr(64 + num1), result)
+    
+    if index + 1 < len(s):
+        num2 = int(s[index:index+2])
+        if 10 <= num2 <= 26:
+            decode_ways(s, index + 2, path + chr(64 + num2), result)
+    
+    return result
 
-    r = []
-    decode_helper(e_str, 0, [], r)
-    return r
-
-e_msg = input("Enter encoded message: ")
-d_msg = decode_ways(e_msg)
-
-print("Decoded messages:")
-for msg in d_msg:
-    print(msg)
+s = input("Enter the encoded message: ")
+possible_decodings = decode_ways(s)
+print("Possible decoded messages:")
+for decoding in possible_decodings:
+    print(decoding)
